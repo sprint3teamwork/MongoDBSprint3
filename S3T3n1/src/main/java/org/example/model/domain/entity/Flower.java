@@ -15,6 +15,12 @@ public class Flower extends Product {
         this.color = color;
     }
 
+    public Flower(int id,String name, double price, String color, int invoiceId) {
+        super(id, name, price, invoiceId);
+        super.setType("Flower");
+        this.color = color;
+    }
+
     public String getColor() {
         return color;
     }
