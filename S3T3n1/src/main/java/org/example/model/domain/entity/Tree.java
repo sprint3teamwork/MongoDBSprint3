@@ -17,6 +17,12 @@ public class Tree extends Product {
         this.height = height;
     }
 
+    public Tree(int id, String name, double price, float height, int invoiceId) {
+        super(id, name, price, invoiceId);
+        super.setType("Tree");
+        this.height = height;
+    }
+
     public float getHeight() {
         return height;
     }
