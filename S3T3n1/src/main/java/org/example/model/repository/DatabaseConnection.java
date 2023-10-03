@@ -3,20 +3,17 @@ package org.example.model.repository;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
-import com.mongodb.*;
-import org.bson.BsonDocument;
-import org.bson.BsonInt64;
-import org.bson.Document;
-import org.bson.conversions.Bson;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
+
 public class DatabaseConnection {
+	
     private static Properties properties = new Properties();
 
     static {								//if we rename inner structure we need to change  SQLsprint3\\S3T3n1
-        try (FileInputStream inputStream = new FileInputStream("SQLsprint3\\S3T3n1\\src\\main\\resources\\application.properties")) {
+        try (FileInputStream inputStream = new FileInputStream("S3T3n1\\src\\main\\resources\\application.properties")) {
             properties.load(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
@@ -26,9 +23,8 @@ public class DatabaseConnection {
     public static MongoDatabase getConnection() {//we have to handle this exception in upper level wit try-with-resources
         
     	String url = properties.getProperty("db.url");
-        String port = properties.getProperty("db.port");
         
-        MongoClient client = new MongoClient(url, port);
+        MongoClient client = MongoClients.create(url);
         
         MongoDatabase db = client.getDatabase("FlowerShop");
         
