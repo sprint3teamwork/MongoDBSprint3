@@ -6,12 +6,15 @@ import java.util.List;
 
 public interface InvoiceDAO {
 
-    static void insertInvoice(Invoice invoice) {
-
-    }
-
-    static List<Invoice> invoicesRetriever() {
-        return null;
-    }
-    void updateInvoice(Invoice invoice);
+    List<Invoice> findAll();
+    
+    Invoice findById(int id);
+    
+    Invoice findByTotalSale(int totalSale);
+    
+    boolean insertInvoice(Invoice i);
+    
+    boolean updateInvoice(Invoice i);
+    
+    boolean deleteInvoice(int id);
 }
