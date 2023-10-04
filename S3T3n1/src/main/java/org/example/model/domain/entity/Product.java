@@ -15,6 +15,14 @@ public class Product {
         this.price = price;
     }
 
+    public Product(int id,String name, double price, int invoiceId){
+        this.id = id;
+        idNextNumber = id +1;
+        this.name = name;
+        this.price = price;
+        this.invoiceId = invoiceId;
+    }
+
     public Product(String name, double price) {
         id = idNextNumber;
         idNextNumber++;

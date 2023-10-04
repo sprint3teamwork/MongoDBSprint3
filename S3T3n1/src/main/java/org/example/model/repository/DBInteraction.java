@@ -1,15 +1,11 @@
 package org.example.model.repository;
 
 import org.example.model.domain.Invoice;
-import org.example.model.domain.entity.Decoration;
-import org.example.model.domain.entity.Flower;
 import org.example.model.domain.entity.Product;
-import org.example.model.domain.entity.Tree;
-import org.example.model.repository.interfaces.InvoiceDAO;
 import org.example.model.repository.invoice.InvoiceDAOImpl;
 import org.example.model.repository.invoice.InvoiceBSON;
-import org.example.model.repository.stock.StockDAOImpl;
-import org.example.model.repository.stock.StockBSON;
+import org.example.model.repository.stock.StockMongoDAO;
+import org.example.model.repository.stock.ProductDocument;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +13,7 @@ import java.util.Map;
 
 public class DBInteraction implements org.example.model.repository.interfaces.DBInteraction {
 
-    private static StockDAOImpl stockDAO = new StockDAOImpl();
+    private static StockMongoDAO stockDAO = new StockMongoDAO();
     private static InvoiceDAOImpl invoiceDAO = new InvoiceDAOImpl();
 
 
@@ -98,12 +94,6 @@ public class DBInteraction implements org.example.model.repository.interfaces.DB
     @Override
     public void insertInvoice(Invoice invoice) {
         invoiceDAO.insertInvoice(invoice);
-    }
-
-    @Override
-    public void tablesInitializer() {
-        InvoiceBSON.createTable();
-        StockBSON.createTable();
     }
 
     @Override

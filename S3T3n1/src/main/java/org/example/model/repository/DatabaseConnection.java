@@ -13,7 +13,7 @@ public class DatabaseConnection {
     private static Properties properties = new Properties();
 
     static {								//if we rename inner structure we need to change  SQLsprint3\\S3T3n1
-        try (FileInputStream inputStream = new FileInputStream("S3T3n1\\src\\main\\resources\\application.properties")) {
+        try (FileInputStream inputStream = new FileInputStream("src\\main\\resources\\application.properties")) {
             properties.load(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
@@ -23,9 +23,7 @@ public class DatabaseConnection {
     public static MongoDatabase getConnection() {//we have to handle this exception in upper level wit try-with-resources
         
     	String url = properties.getProperty("db.url");
-        
         MongoClient client = MongoClients.create(url);
-        
         MongoDatabase db = client.getDatabase("FlowerShop");
         
         return db;
