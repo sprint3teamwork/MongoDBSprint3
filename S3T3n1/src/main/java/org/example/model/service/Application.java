@@ -17,8 +17,6 @@ public class Application {
 
     public static void boot() {
         int option = -1;
-
-        db.tablesInitializer();
         loadData();
 
         do {
@@ -412,11 +410,12 @@ public class Application {
 
     public static void printTotalEarnings() {
         System.out.println("The total earnings of " + flowerShop.getName() + " is: "
-                + flowerShop.getTotalEarnings() + "€.\n");
+                + ((float) Math.round(flowerShop.getTotalEarnings() * 100) / 100) + "€.\n");
     }
 
     public static void printStockTotalValue() {
-        System.out.println("The total stock value of the flowershop is: " + flowerShop.getStockTotalValue() + "€.\n");
+        System.out.println("The total stock value of the flowershop is: " +
+                ((float) Math.round(flowerShop.getStockTotalValue() * 100) / 100) + "€.\n");
     }
 
     public static void printStockQuantities() {
