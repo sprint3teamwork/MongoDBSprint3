@@ -1,80 +1,96 @@
 package org.example.model.repository.invoice;
 
+import org.bson.Document;
 import org.example.model.domain.Invoice;
-import org.example.model.domain.entity.Product;
 import org.example.model.repository.DatabaseConnection;
 import org.example.model.repository.interfaces.InvoiceDAO;
+
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InvoiceDAOImpl implements InvoiceDAO {
 	
-	MongoCollection collInvoice = MongoDatabase.getCollection("Invoice");
+	private static final String COLLECTION_NAME = "invoiceLog";
+	private MongoCollection<Document> invoiceCollection;
 	
-	/*Document sampleDoc = new Document("id","1").append("field name(like id,name,color,etc", "value of each field");
-	collStock.insertOne(sampleDoc);
-	
-	//or to run thru collection list
-	
-	DBCursor cursor = collInvoice.find();
-	while (cursor.hasNext()) {
-		int i = 1;
-		System.out.println(cursor.next());
-		i++;
-	}*/
-	
-    public void insertInvoice(Invoice invoice) {
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            String insertInvoiceSQL = "INSERT INTO `flowershop`.`invoices` (id, Total_Sale) VALUES (?, ?)";
-            PreparedStatement statement = connection.prepareStatement(insertInvoiceSQL);
-            statement.setInt(1, invoice.getId());
-            statement.setDouble(2, invoice.getTotalSale());
-            statement.executeUpdate();
+	public InvoiceDAOImpl() {
+		MongoDatabase database = DatabaseConnection.getConnection();//Connection pooling is a standard leaving connection open in mongo
+		invoiceCollection = database.getCollection(COLLECTION_NAME);
+	}
 
-            // Insert associated products
-           /* for (Product product : invoice.getProductList()) {
-                product.setInvoiceId(invoice.getId());
-            }*/
-        } catch (SQLException e) {
-            e.printStackTrace();
+	@Override
+	public List<Invoice> findAll() {
+		
+		List<Invoice> invoiceLog = new ArrayList();
+		MongoCursor<Document> cursor = invoiceCollection.find().iterator();
+		
+		try {
+			while (cursor.hasNext()) {
+				Document invoiceDoc = cursor.next();
+				invoiceLog.add(mapDocumentToInvoice(invoiceDoc));
+			}
+		} finally {
+			cursor.close();
+		}
+		return invoiceLog;
+	}
+	
+	@Override
+	public Invoice findById(int id) {
+		Document query = new Document("id", id);
+        Document invoiceDoc = invoiceCollection.find(query).first();
+        if (invoiceDoc != null) {
+            return mapDocumentToInvoice(invoiceDoc);
         }
+        return null;
+	}
+	
+	@Override
+	public Invoice findByTotalSale(int totalSale) {
+		Document query = new Document("totalSale", totalSale);
+        Document invoiceDoc = invoiceCollection.find(query).first();
+        if (invoiceDoc != null) {
+            return mapDocumentToInvoice(invoiceDoc);
+        }
+        return null;
+	}
+	
+	@Override
+    public boolean insertInvoice(Invoice i) {
+    	Document invoiceDoc = mapInvoiceToDocument(i);
+    	invoiceCollection.insertOne(invoiceDoc);
+        return true;
     }
 
-    public List<Invoice> invoicesRetriever() {
-        List<Invoice> invoceLog = new ArrayList<>();
-        String query = "SELECT id AS invoice_id, Total_Sale AS invoice_totalSale FROM flowershop.invoices";
-
-        try (Connection connection = DatabaseConnection.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
-
-            while (resultSet.next()) {
-
-                int id = resultSet.getInt("invoice_id");
-                double totalSale = resultSet.getDouble("invoice_totalSale");
-                Invoice invoice = new Invoice(id, totalSale);
-
-                invoceLog.add(invoice);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return invoceLog;
+	@Override
+    public boolean updateInvoice(Invoice i) {
+    	Document query = new Document("id", i.getId());
+    	Document invoiceDoc = mapInvoiceToDocument(i);
+    	invoiceCollection.updateOne(query, new Document("$set", invoiceDoc)); //$set operator to set the fields in the document to the values provided in invoiceDoc
+    	return true;
+    }
+    
+	@Override
+    public boolean deleteInvoice(int id) {
+    	Document query = new Document("id", id);
+    	invoiceCollection.deleteOne(query);
+    	return true;
+    }
+    
+    private Invoice mapDocumentToInvoice(Document invoiceDoc) {
+        int id = invoiceDoc.getInteger("id");
+        double totalSale = invoiceDoc.getDouble("price"); 
+        return new Invoice(id, totalSale);
     }
 
-    public void updateInvoice(Invoice invoice) {
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            String updateInvoiceSQL = "UPDATE `flowershop`.`invoices` SET Total_Sale = ? WHERE id = ?";
-            PreparedStatement statement = connection.prepareStatement(updateInvoiceSQL);
-            statement.setDouble(1, invoice.getTotalSale());
-            statement.setInt(2, invoice.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private Document mapInvoiceToDocument(Invoice i) {
+    	return new Document("id", i.getId())
+                .append("totalSale", i.getTotalSale());
     }
+        
 
 }
