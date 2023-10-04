@@ -1,6 +1,8 @@
 package org.example.model.repository.interfaces;
 
 import java.util.List;
+
+import org.bson.Document;
 import org.example.model.domain.entity.Product;
 
 public interface StockDAO {
@@ -16,5 +18,13 @@ public interface StockDAO {
 	boolean insertProduct(Product p);
 	boolean updateProduct(Product p);
 	boolean deleteProduct(int id);
+
+	private Product mapDocumentToProduct(Document productDoc) {
+		return null;
+	}
+
+	private Document mapProductToDocument(Product p) {
+		return null;
+	}
 
 }

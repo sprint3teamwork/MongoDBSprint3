@@ -69,7 +69,8 @@ public class Invoice {
 	public String toString() {
 
 		if(productList == null){
-			return "Id = " + this.id + " | [" + this.loadedProductList + "] | TOTAL: " + this.totalSale + "€";
+			return "Id = " + this.id + " | [" + this.loadedProductList + "] | TOTAL: " +
+					((float) Math.round(this.totalSale * 100) / 100) + "€";
 		}else {
 			return stringBuilderInAppInvoices();
 		}
@@ -85,7 +86,7 @@ public class Invoice {
 				stringBuilder.append(", ");
 			}
 		}
-		stringBuilder.append("] | TOTAL: ").append(this.totalSale).append("€");
+		stringBuilder.append("] | TOTAL: ").append(((float) Math.round(this.totalSale * 100) / 100)).append("€");
 
 		return stringBuilder.toString();
 	}
