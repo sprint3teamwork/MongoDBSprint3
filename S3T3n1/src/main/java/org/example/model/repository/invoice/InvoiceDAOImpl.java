@@ -83,7 +83,7 @@ public class InvoiceDAOImpl implements InvoiceDAO {
     
     private Invoice mapDocumentToInvoice(Document invoiceDoc) {
         int id = invoiceDoc.getInteger("id");
-        double totalSale = invoiceDoc.getDouble("price"); 
+        double totalSale = invoiceDoc.getDouble("totalSale");
         return new Invoice(id, totalSale);
     }
 
