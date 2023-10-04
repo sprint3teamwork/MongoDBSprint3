@@ -3,9 +3,7 @@ package org.example.model.repository;
 import org.example.model.domain.Invoice;
 import org.example.model.domain.entity.Product;
 import org.example.model.repository.invoice.InvoiceDAOImpl;
-import org.example.model.repository.invoice.InvoiceBSON;
 import org.example.model.repository.stock.StockMongoDAO;
-import org.example.model.repository.stock.ProductDocument;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,7 @@ public class DBInteraction implements org.example.model.repository.interfaces.DB
 
     @Override
     public boolean invoiceDataIsEmpty() {
-        return invoiceDAO.invoicesRetriever().isEmpty();
+        return invoiceDAO.findAll().isEmpty();
     }
 
     @Override
@@ -53,7 +51,7 @@ public class DBInteraction implements org.example.model.repository.interfaces.DB
 
     @Override
     public List<Invoice> getInvoiceData() {
-        return invoiceDAO.invoicesRetriever();
+        return invoiceDAO.findAll();
     }
 
     @Override
