@@ -1,6 +1,6 @@
 package org.example.model.domain.entity;
 
-public class Product {
+public abstract class Product {
     protected static int idNextNumber = 1;
     protected int id;
     protected String name;
